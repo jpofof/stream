@@ -1,13 +1,46 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package stream;
 
-/**
- *
- * @author Alunos
- */
-public class Conteudo {
+
+public abstract class Conteudo {
+    protected String nome;
+    protected String categoria;
+    protected int faixa;
+    protected float nota;
     
-}
+    public Conteudo(String nome, String categoria, int faixa,float nota) {
+        this.categoria = categoria;
+        this.faixa = faixa;
+        this.nome = nome;
+        this.setNota(nota);
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public String getCategoria() {
+        return categoria;
+    }
+
+    public int getFaixa() {
+        return faixa;
+    }
+
+    public float getNota() {
+        return nota;
+    }
+
+    public void setCategoria(String categoria) {
+        this.categoria = categoria;
+    }
+
+    public void setNota(float nota) {
+        if(nota >= 0 && nota <=5) {
+            this.nota = nota;
+        } else {
+            System.out.println("Nota Inválida");
+        }
+    }
+    
+    
+    }
