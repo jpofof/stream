@@ -1,6 +1,8 @@
 
 package stream;
 
-public class filme {
-    
+public class filme extends Conteudo{
+    public filme(){
+        super();
+    }
 }
