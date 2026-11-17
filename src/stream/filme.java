@@ -2,7 +2,7 @@
 package stream;
 
 public class filme extends Conteudo{
-    public filme(){
-        super();
+    public filme(String nome, String categoria, int faixa, float nota) {
+        super(nome, categoria, faixa, nota);
     }
 }
