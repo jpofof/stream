@@ -43,6 +43,13 @@ public abstract class Conteudo {
             System.out.println("Nota Inválida");
         }
     }
-    public abstract Duration getDuracao();
+
     
-    }
+    
+    public Duration getDuracao() {
+    return duracao;
+}
+
+public void setDuracao(Duration duracao) {
+    this.duracao = duracao;
+}
