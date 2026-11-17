@@ -9,11 +9,12 @@ public abstract class Conteudo {
     protected float nota;
     protected Duration duracao;
 
-    public Conteudo(String nome, String categoria, int faixa,float nota) {
+    public Conteudo(String nome, String categoria, int faixa,float nota, Duration duracao) {
         this.categoria = categoria;
         this.faixa = faixa;
         this.nome = nome;
         this.setNota(nota);
+        this.setDuracao(duracao);
     }
 
     public String getNome() {
