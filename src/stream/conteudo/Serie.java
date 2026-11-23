@@ -1,63 +1,67 @@
 package stream.conteudo;
 
-import java.time.Duration;
-import java.util.ArrayList;
-
 import stream.usuario.SuperClassUsuarios;
 
 /**
- * Serie: dividida em temporadas, e cada temporada tem uma lista com a duracao dos episodios.
- * A duracao total e a soma de todos os episodios.
+ * Serie: dividida em temporadas e episodios.
+ * Duracao total = temporadas x episodios por temporada x duracao de cada episodio.
  */
 public class Serie extends Conteudo {
 
-    private static final double VALOR_POR_REPRODUCAO = 0.30; // R$ por reproducao
+    private int temporadas;
+    private int episodiosPorTemporada;
+    private int duracaoEpisodio;                   // em minutos
+    private double valorPorReproducao = 0.30;      // R$ pagos ao criador a cada reproducao
 
-    private final ArrayList<ArrayList<Duration>> temporadas;
-
-    public Serie(String nome, String categoria, int faixa, String criador) {
+    public Serie(String nome, String categoria, int faixa, String criador,
+                 int temporadas, int episodiosPorTemporada, int duracaoEpisodio) {
         super(nome, categoria, faixa, criador);
-        temporadas = new ArrayList<>();
+        this.setTemporadas(temporadas);
+        this.setEpisodiosPorTemporada(episodiosPorTemporada);
+        this.setDuracaoEpisodio(duracaoEpisodio);
     }
 
-    // Cria uma nova temporada (vazia) no final da serie.
-    public void addTemporada() {
-        temporadas.add(new ArrayList<>());
+    public int getTemporadas() {
+        return temporadas;
     }
 
-    // Adiciona um episodio na temporada informada (a primeira temporada e a 1).
-    public void addEpisodio(int temporada, Duration duracao) {
-        if (temporada < 1 || temporada > temporadas.size()) {
-            throw new IllegalArgumentException("A temporada " + temporada + " nao existe. A serie tem "
-                    + temporadas.size() + " temporada(s).");
+    public void setTemporadas(int temporadas) {
+        if (temporadas <= 0) {
+            System.out.println("Erro: a serie deve ter pelo menos 1 temporada.");
+        } else {
+            this.temporadas = temporadas;
         }
-        validarDuracao(duracao);
-        temporadas.get(temporada - 1).add(duracao);
     }
 
-    public int getQuantidadeTemporadas() {
-        return temporadas.size();
+    public int getEpisodiosPorTemporada() {
+        return episodiosPorTemporada;
     }
 
-    public int getQuantidadeEpisodios() {
-        int total = 0;
-        for (ArrayList<Duration> temporada : temporadas) {
-            total += temporada.size();
+    public void setEpisodiosPorTemporada(int episodiosPorTemporada) {
+        if (episodiosPorTemporada <= 0) {
+            System.out.println("Erro: cada temporada deve ter pelo menos 1 episodio.");
+        } else {
+            this.episodiosPorTemporada = episodiosPorTemporada;
         }
-        return total;
     }
+
+    public int getDuracaoEpisodio() {
+        return duracaoEpisodio;
+    }
+
+    public void setDuracaoEpisodio(int duracaoEpisodio) {
+        if (duracaoEpisodio <= 0) {
+            System.out.println("Erro: a duracao do episodio deve ser maior que zero.");
+        } else {
+            this.duracaoEpisodio = duracaoEpisodio;
+        }
+    }
+
+    // ---------- Sobreposicao (@Override) ----------
 
     @Override
-    public Duration getDuracaoTotal() {
-        Duration total = Duration.ZERO;
-
-        for (ArrayList<Duration> temporada : temporadas) {
-            for (Duration episodio : temporada) {
-                total = total.plus(episodio);
-            }
-        }
-
-        return total;
+    public int getDuracaoTotal() {
+        return temporadas * episodiosPorTemporada * duracaoEpisodio;
     }
 
     @Override
@@ -67,24 +71,22 @@ public class Serie extends Conteudo {
 
     @Override
     public double calcularRoyalties() {
-        return getTotalReproducoes() * VALOR_POR_REPRODUCAO;
+        return getTotalReproducoes() * valorPorReproducao;
+    }
+
+    @Override
+    public boolean estaValido() {
+        return super.estaValido() && temporadas > 0 && episodiosPorTemporada > 0 && duracaoEpisodio > 0;
     }
 
     @Override
     public boolean reproduzir(SuperClassUsuarios usuario) {
         boolean liberado = super.reproduzir(usuario);
         if (liberado) {
-            System.out.println("Reproduzindo a serie \"" + nome + "\" (" + getQuantidadeTemporadas()
-                    + " temporadas, " + getQuantidadeEpisodios() + " episodios). Boa maratona, "
+            System.out.println("Reproduzindo a serie \"" + nome + "\" (" + temporadas + " temporadas, "
+                    + (temporadas * episodiosPorTemporada) + " episodios). Boa maratona, "
                     + usuario.getNome() + "!");
         }
         return liberado;
-    }
-
-    @Override
-    public void exibirDetalhes() {
-        super.exibirDetalhes();
-        System.out.println("   Temporadas.....: " + getQuantidadeTemporadas());
-        System.out.println("   Episodios......: " + getQuantidadeEpisodios());
     }
 }

@@ -1,48 +1,51 @@
 package stream.conteudo;
 
-import java.time.Duration;
-
 import stream.usuario.SuperClassUsuarios;
 
 /**
- * Podcast: cada objeto representa um EPISODIO de podcast (audio).
+ * Podcast: cada objeto e um EPISODIO de podcast (so audio).
  */
 public class Podcast extends Conteudo {
 
-    private static final double VALOR_POR_REPRODUCAO = 0.10; // R$ por reproducao
-
     private int numeroEpisodio;
-    private Duration duracao; // tempo de audio
+    private int duracao;                           // minutos de audio
+    private double valorPorReproducao = 0.10;      // R$ pagos ao criador a cada reproducao
 
     public Podcast(String nome, String categoria, int faixa, String criador,
-                   int numeroEpisodio, Duration duracao) {
+                   int numeroEpisodio, int duracao) {
         super(nome, categoria, faixa, criador);
-        setNumeroEpisodio(numeroEpisodio);
-        setDuracao(duracao);
+        this.setNumeroEpisodio(numeroEpisodio);
+        this.setDuracao(duracao);
     }
 
     public int getNumeroEpisodio() {
         return numeroEpisodio;
     }
 
-    public final void setNumeroEpisodio(int numeroEpisodio) {
+    public void setNumeroEpisodio(int numeroEpisodio) {
         if (numeroEpisodio <= 0) {
-            throw new IllegalArgumentException("O numero do episodio deve ser maior que zero.");
+            System.out.println("Erro: o numero do episodio deve ser maior que zero.");
+        } else {
+            this.numeroEpisodio = numeroEpisodio;
         }
-        this.numeroEpisodio = numeroEpisodio;
     }
 
-    public Duration getDuracao() {
+    public int getDuracao() {
         return duracao;
     }
 
-    public final void setDuracao(Duration duracao) {
-        validarDuracao(duracao);
-        this.duracao = duracao;
+    public void setDuracao(int duracao) {
+        if (duracao <= 0) {
+            System.out.println("Erro: os minutos de audio devem ser maiores que zero.");
+        } else {
+            this.duracao = duracao;
+        }
     }
 
+    // ---------- Sobreposicao (@Override) ----------
+
     @Override
-    public Duration getDuracaoTotal() {
+    public int getDuracaoTotal() {
         return duracao;
     }
 
@@ -53,7 +56,12 @@ public class Podcast extends Conteudo {
 
     @Override
     public double calcularRoyalties() {
-        return getTotalReproducoes() * VALOR_POR_REPRODUCAO;
+        return getTotalReproducoes() * valorPorReproducao;
+    }
+
+    @Override
+    public boolean estaValido() {
+        return super.estaValido() && numeroEpisodio > 0 && duracao > 0;
     }
 
     @Override
@@ -65,11 +73,5 @@ public class Podcast extends Conteudo {
                     + usuario.getNome() + "!");
         }
         return liberado;
-    }
-
-    @Override
-    public void exibirDetalhes() {
-        super.exibirDetalhes();
-        System.out.println("   Episodio.......: #" + numeroEpisodio);
     }
 }

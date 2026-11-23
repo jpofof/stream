@@ -1,14 +1,13 @@
 package stream.contrato;
 
 /**
- * Contrato de remuneracao do criador do conteudo.
- * Cada tipo de conteudo calcula os royalties do seu jeito.
+ * Contrato de pagamento ao criador do conteudo (royalties).
  */
 public interface Remuneravel {
 
-    // Nome do criador que recebe os royalties.
+    // Nome de quem recebe os royalties.
     String getCriador();
 
-    // Valor (em reais) devido ao criador com base nas reproducoes reais.
+    // Valor em reais que o criador recebe, de acordo com as reproducoes.
     double calcularRoyalties();
 }

@@ -1,17 +1,14 @@
 package stream.contrato;
 
 /**
- * Contrato de avaliacao por estrelas.
- * Todo conteudo que pode receber notas de 1 a 5 deve cumprir este contrato.
+ * Contrato de avaliacao: quem assinar este contrato (implements Avaliavel)
+ * e obrigado a escrever os metodos abaixo.
  */
 public interface Avaliavel {
 
-    // Registra uma nota de 1 a 5 estrelas e recalcula a media.
-    void avaliar(int estrelas);
+    // Registra uma nota de 1 a 5 estrelas. Devolve true se a nota foi aceita.
+    boolean avaliar(int estrelas);
 
-    // Media atual das notas (0 se ainda nao houver avaliacoes).
-    float getNota();
-
-    // Quantidade de avaliacoes recebidas ate agora.
-    int getQuantidadeAvaliacoes();
+    // Media das notas recebidas.
+    double getNota();
 }
