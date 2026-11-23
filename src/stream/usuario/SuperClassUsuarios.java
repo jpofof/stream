@@ -51,8 +51,7 @@ public abstract class SuperClassUsuarios {
     // "Infantil" ou "Adulta".
     public abstract String getTipoConta();
 
-    @Override
-    public String toString() {
+    public String getResumo() {
         return nome + " (" + idade + " anos, conta " + getTipoConta() + ")";
     }
 }
