@@ -51,7 +51,7 @@ public class Catalogo {
     // Busca pelo nome. Retorna null se nao achar.
     public Conteudo buscar(String nome) {
         for (int i = 0; i < conteudos.size(); i++) {
-            if (conteudos.get(i).getNome().equalsIgnoreCase(nome)) {
+            if (conteudos.get(i).getNome().equals(nome)) {
                 return conteudos.get(i);
             }
         }
@@ -71,11 +71,11 @@ public class Catalogo {
 
     // Lista tudo.
     public void listar() {
-        if (conteudos.isEmpty()) {
+        if (conteudos.size() == 0) {
             System.out.println("O catalogo esta vazio.");
         }
         for (int i = 0; i < conteudos.size(); i++) {
-            System.out.println((i + 1) + " - " + conteudos.get(i));
+            System.out.println((i + 1) + " - " + conteudos.get(i).getResumo());
         }
     }
 
@@ -84,7 +84,7 @@ public class Catalogo {
         int ocultos = 0;
         for (int i = 0; i < conteudos.size(); i++) {
             if (usuario.podeAssistir(conteudos.get(i))) {
-                System.out.println((i + 1) + " - " + conteudos.get(i));
+                System.out.println((i + 1) + " - " + conteudos.get(i).getResumo());
             } else {
                 ocultos = ocultos + 1;
             }
@@ -99,7 +99,7 @@ public class Catalogo {
         int encontrados = 0;
         for (int i = 0; i < conteudos.size(); i++) {
             if (conteudos.get(i).getTipo().equals(tipo)) {
-                System.out.println((i + 1) + " - " + conteudos.get(i));
+                System.out.println((i + 1) + " - " + conteudos.get(i).getResumo());
                 encontrados = encontrados + 1;
             }
         }
@@ -125,7 +125,7 @@ public class Catalogo {
     }
 
     public void exibirLogAuditoria() {
-        if (logAuditoria.isEmpty()) {
+        if (logAuditoria.size() == 0) {
             System.out.println("Nenhuma tentativa bloqueada registrada.");
         }
         for (int i = 0; i < logAuditoria.size(); i++) {
