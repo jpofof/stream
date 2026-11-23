@@ -10,19 +10,6 @@ public class Infantil extends SuperClassUsuarios {
 
     public Infantil(String nome, int idade) {
         super(nome, idade);
-        validarIdadeInfantil(idade);
-    }
-
-    @Override
-    public void setIdade(int idade) {
-        validarIdadeInfantil(idade);
-        super.setIdade(idade);
-    }
-
-    private void validarIdadeInfantil(int idade) {
-        if (idade >= 18) {
-            throw new IllegalArgumentException("A conta infantil e somente para menores de 18 anos.");
-        }
     }
 
     @Override
