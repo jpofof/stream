@@ -68,7 +68,7 @@ public class Podcast extends Conteudo {
     public boolean reproduzir(SuperClassUsuarios usuario) {
         boolean liberado = super.reproduzir(usuario);
         if (liberado) {
-            System.out.println("Tocando o episodio " + numeroEpisodio + " do podcast \"" + nome
+            System.out.println("Tocando o episodio " + numeroEpisodio + " do podcast \"" + getNome()
                     + "\" (" + getDuracaoFormatada() + " de audio). Boa audicao, "
                     + usuario.getNome() + "!");
         }
