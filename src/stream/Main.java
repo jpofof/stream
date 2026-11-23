@@ -82,8 +82,8 @@ public class Main {
         System.out.println();
         System.out.println("=== ROYALTIES ===");
         catalogo.exibirRelatorioRoyalties();
-        System.out.printf("Royalties do Estudio Horizonte: R$ %.2f%n",
-                catalogo.calcularTotalRoyalties("Estudio Horizonte"));
+        System.out.println("Royalties do Estudio Horizonte: R$ "
+                + catalogo.reais(catalogo.calcularTotalRoyalties("Estudio Horizonte")));
 
         // ---------- 10. Validacoes: dados invalidos sao recusados ----------
         System.out.println();

@@ -42,33 +42,17 @@ public class Catalogo {
         return conteudos.size();
     }
 
-    // Devolve uma COPIA da lista. Assim quem chamar nao consegue mexer na lista original.
-    public ArrayList<Conteudo> getConteudos() {
-        ArrayList<Conteudo> copia = new ArrayList<Conteudo>();
-        for (Conteudo c : conteudos) {
-            copia.add(c);
-        }
-        return copia;
-    }
-
-    public ArrayList<String> getLogAuditoria() {
-        ArrayList<String> copia = new ArrayList<String>();
-        for (String registro : logAuditoria) {
-            copia.add(registro);
-        }
-        return copia;
+    public int getQuantidadeLog() {
+        return logAuditoria.size();
     }
 
     // ---------- Busca (sobrecarga: o mesmo nome buscar com parametros diferentes) ----------
 
     // Busca pelo nome. Retorna null se nao achar.
     public Conteudo buscar(String nome) {
-        if (nome == null) {
-            return null;
-        }
-        for (Conteudo c : conteudos) {
-            if (c.getNome().equalsIgnoreCase(nome.trim())) {
-                return c;
+        for (int i = 0; i < conteudos.size(); i++) {
+            if (conteudos.get(i).getNome().equalsIgnoreCase(nome)) {
+                return conteudos.get(i);
             }
         }
         return null;
@@ -89,7 +73,6 @@ public class Catalogo {
     public void listar() {
         if (conteudos.isEmpty()) {
             System.out.println("O catalogo esta vazio.");
-            return;
         }
         for (int i = 0; i < conteudos.size(); i++) {
             System.out.println((i + 1) + " - " + conteudos.get(i));
@@ -115,7 +98,7 @@ public class Catalogo {
     public void listar(String tipo) {
         int encontrados = 0;
         for (int i = 0; i < conteudos.size(); i++) {
-            if (conteudos.get(i).getTipo().equalsIgnoreCase(tipo)) {
+            if (conteudos.get(i).getTipo().equals(tipo)) {
                 System.out.println((i + 1) + " - " + conteudos.get(i));
                 encontrados = encontrados + 1;
             }
@@ -144,10 +127,9 @@ public class Catalogo {
     public void exibirLogAuditoria() {
         if (logAuditoria.isEmpty()) {
             System.out.println("Nenhuma tentativa bloqueada registrada.");
-            return;
         }
-        for (String registro : logAuditoria) {
-            System.out.println(registro);
+        for (int i = 0; i < logAuditoria.size(); i++) {
+            System.out.println(logAuditoria.get(i));
         }
     }
 
@@ -156,8 +138,8 @@ public class Catalogo {
     // Soma os royalties de todo o catalogo.
     public double calcularTotalRoyalties() {
         double total = 0;
-        for (Conteudo c : conteudos) {
-            total = total + c.calcularRoyalties();   // cada filha calcula do seu jeito
+        for (int i = 0; i < conteudos.size(); i++) {
+            total = total + conteudos.get(i).calcularRoyalties();   // cada filha calcula do seu jeito
         }
         return total;
     }
@@ -165,26 +147,25 @@ public class Catalogo {
     // Soma os royalties so dos conteudos de um criador.
     public double calcularTotalRoyalties(String criador) {
         double total = 0;
-        if (criador == null) {
-            return total;
-        }
-        for (Conteudo c : conteudos) {
-            if (c.getCriador().equalsIgnoreCase(criador.trim())) {
-                total = total + c.calcularRoyalties();
+        for (int i = 0; i < conteudos.size(); i++) {
+            if (conteudos.get(i).getCriador().equals(criador)) {
+                total = total + conteudos.get(i).calcularRoyalties();
             }
         }
         return total;
     }
 
     public void exibirRelatorioRoyalties() {
-        if (conteudos.isEmpty()) {
-            System.out.println("O catalogo esta vazio.");
-            return;
+        for (int i = 0; i < conteudos.size(); i++) {
+            Conteudo c = conteudos.get(i);
+            System.out.println(c.getNome() + " | " + c.getCriador() + " | "
+                    + c.getTotalReproducoes() + " reproducoes | R$ " + reais(c.calcularRoyalties()));
         }
-        for (Conteudo c : conteudos) {
-            System.out.printf("%-30s | %-20s | %3d reproducoes | R$ %.2f%n",
-                    c.getNome(), c.getCriador(), c.getTotalReproducoes(), c.calcularRoyalties());
-        }
-        System.out.printf("TOTAL DE ROYALTIES: R$ %.2f%n", calcularTotalRoyalties());
+        System.out.println("TOTAL DE ROYALTIES: R$ " + reais(calcularTotalRoyalties()));
+    }
+
+    // Arredonda para 2 casas decimais (1.2345 vira 1.23).
+    public double reais(double valor) {
+        return Math.round(valor * 100) / 100.0;
     }
 }
