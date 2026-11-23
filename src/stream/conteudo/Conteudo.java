@@ -99,8 +99,8 @@ public abstract class Conteudo implements Avaliavel, Remuneravel {
             System.out.println("Erro: a nota deve ser de 1 a 5 estrelas.");
             return false;
         }
-        somaNotas = somaNotas + estrelas;
-        quantidadeNotas = quantidadeNotas + 1;
+        somaNotas += estrelas;
+        quantidadeNotas++;
         nota = (double) somaNotas / quantidadeNotas;   // recalcula a media
         return true;
     }
@@ -129,7 +129,7 @@ public abstract class Conteudo implements Avaliavel, Remuneravel {
     // As filhas reescrevem este metodo, chamam super.reproduzir() e mostram a mensagem delas.
     public boolean reproduzir(SuperClassUsuarios usuario) {
         if (usuario.podeAssistir(this)) {
-            totalReproducoes = totalReproducoes + 1;
+            totalReproducoes++;
             return true;
         }
         System.out.println("ACESSO NEGADO: \"" + nome + "\" tem classificacao " + getFaixaTexto()
