@@ -83,7 +83,7 @@ public class Serie extends Conteudo {
     public boolean reproduzir(SuperClassUsuarios usuario) {
         boolean liberado = super.reproduzir(usuario);
         if (liberado) {
-            System.out.println("Reproduzindo a serie \"" + nome + "\" (" + temporadas + " temporadas, "
+            System.out.println("Reproduzindo a serie \"" + getNome() + "\" (" + temporadas + " temporadas, "
                     + (temporadas * episodiosPorTemporada) + " episodios). Boa maratona, "
                     + usuario.getNome() + "!");
         }

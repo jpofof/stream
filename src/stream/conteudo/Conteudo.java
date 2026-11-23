@@ -11,12 +11,12 @@ import stream.usuario.SuperClassUsuarios;
  */
 public abstract class Conteudo implements Avaliavel, Remuneravel {
 
-    // protected: as classes filhas tambem enxergam estes atributos.
-    protected String nome;
-    protected String categoria;
-    protected String criador;
-    protected int faixa = -1;   // -1 = ainda nao informada. Validas: 0 (livre), 10, 12, 14, 16 e 18
-    protected double nota;      // media das notas (0 enquanto ninguem avaliar)
+    // private: so esta classe mexe direto. As filhas usam os getters.
+    private String nome;
+    private String categoria;
+    private String criador;
+    private int faixa = -1;   // -1 = ainda nao informada. Validas: 0 (livre), 10, 12, 14, 16 e 18
+    private double nota;      // media das notas (0 enquanto ninguem avaliar)
 
     // private: so esta classe mexe. Por isso estes nao tem setter:
     // ninguem de fora pode "inventar" uma nota ou uma reproducao.
@@ -38,10 +38,10 @@ public abstract class Conteudo implements Avaliavel, Remuneravel {
     }
 
     public void setNome(String nome) {
-        if (nome == null || nome.trim().isEmpty()) {
+        if (nome == null || nome.trim().equals("")) {
             System.out.println("Erro: o nome nao pode ser vazio.");
         } else {
-            this.nome = nome.trim();
+            this.nome = nome;
         }
     }
 
@@ -50,10 +50,10 @@ public abstract class Conteudo implements Avaliavel, Remuneravel {
     }
 
     public void setCategoria(String categoria) {
-        if (categoria == null || categoria.trim().isEmpty()) {
+        if (categoria == null || categoria.trim().equals("")) {
             System.out.println("Erro: a categoria nao pode ser vazia.");
         } else {
-            this.categoria = categoria.trim();
+            this.categoria = categoria;
         }
     }
 
@@ -63,10 +63,10 @@ public abstract class Conteudo implements Avaliavel, Remuneravel {
     }
 
     public void setCriador(String criador) {
-        if (criador == null || criador.trim().isEmpty()) {
+        if (criador == null || criador.trim().equals("")) {
             System.out.println("Erro: o criador nao pode ser vazio.");
         } else {
-            this.criador = criador.trim();
+            this.criador = criador;
         }
     }
 

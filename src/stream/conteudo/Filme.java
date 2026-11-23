@@ -53,7 +53,7 @@ public class Filme extends Conteudo {
     public boolean reproduzir(SuperClassUsuarios usuario) {
         boolean liberado = super.reproduzir(usuario);
         if (liberado) {
-            System.out.println("Reproduzindo o filme \"" + nome + "\" (" + getDuracaoFormatada()
+            System.out.println("Reproduzindo o filme \"" + getNome() + "\" (" + getDuracaoFormatada()
                     + "). Bom filme, " + usuario.getNome() + "!");
         }
         return liberado;
