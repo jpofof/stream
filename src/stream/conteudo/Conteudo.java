@@ -163,8 +163,7 @@ public abstract class Conteudo implements Avaliavel, Remuneravel {
     }
 
     // Resumo de uma linha, usado nas listagens.
-    @Override
-    public String toString() {
+    public String getResumo() {
         return "[" + getTipo() + "] " + nome + " | " + getFaixaTexto() + " | "
                 + getDuracaoFormatada() + " | " + getNotaTexto();
     }
