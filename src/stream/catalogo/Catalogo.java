@@ -86,7 +86,7 @@ public class Catalogo {
             if (usuario.podeAssistir(conteudos.get(i))) {
                 System.out.println((i + 1) + " - " + conteudos.get(i).getResumo());
             } else {
-                ocultos = ocultos + 1;
+                ocultos++;
             }
         }
         if (ocultos > 0) {
@@ -100,7 +100,7 @@ public class Catalogo {
         for (int i = 0; i < conteudos.size(); i++) {
             if (conteudos.get(i).getTipo().equals(tipo)) {
                 System.out.println((i + 1) + " - " + conteudos.get(i).getResumo());
-                encontrados = encontrados + 1;
+                encontrados++;
             }
         }
         if (encontrados == 0) {
@@ -139,7 +139,7 @@ public class Catalogo {
     public double calcularTotalRoyalties() {
         double total = 0;
         for (int i = 0; i < conteudos.size(); i++) {
-            total = total + conteudos.get(i).calcularRoyalties();   // cada filha calcula do seu jeito
+            total += conteudos.get(i).calcularRoyalties();   // cada filha calcula do seu jeito
         }
         return total;
     }
@@ -149,7 +149,7 @@ public class Catalogo {
         double total = 0;
         for (int i = 0; i < conteudos.size(); i++) {
             if (conteudos.get(i).getCriador().equals(criador)) {
-                total = total + conteudos.get(i).calcularRoyalties();
+                total += conteudos.get(i).calcularRoyalties();
             }
         }
         return total;
