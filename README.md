@@ -9,7 +9,7 @@ Plataforma de streaming em console. Projeto Integrador de POO - Fatec Votorantim
 ## Estrutura (pacotes)
 | Pacote | Classes | Papel |
 |---|---|---|
-| `stream` | `Main` | Demonstracao + menu no console |
+| `stream` | `Main` | Menu no console |
 | `stream.conteudo` | `Conteudo` (abstrata), `Filme`, `Serie`, `Podcast` | Heranca |
 | `stream.usuario` | `SuperClassUsuarios` (abstrata), `Infantil`, `Adulto` | Heranca + controle parental |
 | `stream.contrato` | `Avaliavel`, `Remuneravel` | Interfaces |
@@ -23,14 +23,14 @@ Plataforma de streaming em console. Projeto Integrador de POO - Fatec Votorantim
 - Sobrecarga: `Catalogo.buscar(String)`/`buscar(int)`, `listar()`/`listar(usuario)`/`listar(tipo)`, `calcularTotalRoyalties()`/`calcularTotalRoyalties(criador)`.
 - Interfaces: `Avaliavel` e `Remuneravel` (implementadas por `Conteudo`).
 - Agregacao: `Catalogo` tem um `ArrayList<Conteudo>`.
-- `Main`: primeiro roda uma demonstracao (objetos criados no codigo) e depois abre um menu com `Scanner`, `while` e `switch`. Letras no lugar de numeros sao tratadas com `hasNextInt()`.
+- `Main`: cria alguns conteudos de exemplo e abre um menu com `Scanner`, `while` e `switch`. Letras no lugar de numeros sao tratadas com `hasNextInt()`.
 
 ## Regras do Tema 6
 - **Duracao padronizada:** tudo em minutos (`getDuracaoTotal`). Filme: duracao unica. Serie: temporadas x episodios x duracao. Podcast: minutos de audio.
 - **Avaliacao:** 1 a 5 estrelas; a media e recalculada a cada nota.
 - **Controle parental:** `podeAssistir` no usuario. `Infantil` so assiste faixa <= idade; `Adulto` assiste tudo.
 - **Royalties:** pagos ao criador por reproducao real (Filme R$ 0,50, Serie R$ 0,30, Podcast R$ 0,10). Tentativa bloqueada nao conta.
-- **Caso de teste:** secao 4 do `Main`. Perfil de 14 anos tenta ver "Noite Sem Fim" (18+): aparece ACESSO NEGADO e a tentativa vai para o log de auditoria.
+- **Caso de teste:** menu opcao 3: escolha "Noite Sem Fim", nome qualquer e idade 14. Perfil de 14 anos tenta ver "Noite Sem Fim" (18+): aparece ACESSO NEGADO e a tentativa vai para o log de auditoria.
 
 ## Polimorfismo (so o que a turma viu)
 - **Sobrecarga:** mesmo nome de metodo, parametros diferentes (`listar`, `buscar`).
