@@ -38,7 +38,7 @@ public abstract class Conteudo implements Avaliavel, Remuneravel {
     }
 
     public void setNome(String nome) {
-        if (nome == null || nome.trim().equals("")) {
+        if (nome == null || nome.equals("")) {
             System.out.println("Erro: o nome nao pode ser vazio.");
         } else {
             this.nome = nome;
@@ -50,7 +50,7 @@ public abstract class Conteudo implements Avaliavel, Remuneravel {
     }
 
     public void setCategoria(String categoria) {
-        if (categoria == null || categoria.trim().equals("")) {
+        if (categoria == null || categoria.equals("")) {
             System.out.println("Erro: a categoria nao pode ser vazia.");
         } else {
             this.categoria = categoria;
@@ -63,7 +63,7 @@ public abstract class Conteudo implements Avaliavel, Remuneravel {
     }
 
     public void setCriador(String criador) {
-        if (criador == null || criador.trim().equals("")) {
+        if (criador == null || criador.equals("")) {
             System.out.println("Erro: o criador nao pode ser vazio.");
         } else {
             this.criador = criador;
