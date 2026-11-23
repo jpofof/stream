@@ -50,8 +50,4 @@ public abstract class SuperClassUsuarios {
 
     // "Infantil" ou "Adulta".
     public abstract String getTipoConta();
-
-    public String getResumo() {
-        return nome + " (" + idade + " anos, conta " + getTipoConta() + ")";
-    }
 }
