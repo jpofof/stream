@@ -9,7 +9,7 @@ Plataforma de streaming em console. Projeto Integrador de POO - Fatec Votorantim
 ## Estrutura (pacotes)
 | Pacote | Classes | Papel |
 |---|---|---|
-| `stream` | `Main` | Menu no console |
+| `stream` | `Main` | Demonstracao (sem digitar) |
 | `stream.conteudo` | `Conteudo` (abstrata), `Filme`, `Serie`, `Podcast` | Heranca |
 | `stream.usuario` | `SuperClassUsuarios` (abstrata), `Infantil`, `Adulto` | Heranca + controle parental |
 | `stream.contrato` | `Avaliavel`, `Remuneravel` | Interfaces |
