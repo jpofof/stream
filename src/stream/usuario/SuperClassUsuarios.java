@@ -3,52 +3,52 @@ package stream.usuario;
 import stream.conteudo.Conteudo;
 
 /**
- * Superclasse abstrata dos usuarios da plataforma.
- * A conta pode ser Infantil (menor de 18 anos) ou Adulto (18 anos ou mais),
- * e cada uma decide, do seu jeito, o que pode assistir.
+ * Classe mae (abstrata) dos usuarios. A conta pode ser Infantil (menor de 18 anos)
+ * ou Adulto (18 anos ou mais), e cada uma decide o que pode assistir.
  */
 public abstract class SuperClassUsuarios {
 
     private String nome;
-    private int idade;
+    private int idade = -1;   // -1 = ainda nao informada
 
     public SuperClassUsuarios(String nome, int idade) {
-        setNome(nome);
-        validarIdade(idade);
-        this.idade = idade;
+        this.setNome(nome);
+        this.setIdade(idade);
     }
 
     public String getNome() {
         return nome;
     }
 
-    public final void setNome(String nome) {
+    public void setNome(String nome) {
         if (nome == null || nome.trim().isEmpty()) {
-            throw new IllegalArgumentException("O nome do usuario nao pode ser vazio.");
+            System.out.println("Erro: o nome do usuario nao pode ser vazio.");
+        } else {
+            this.nome = nome.trim();
         }
-        this.nome = nome.trim();
     }
 
     public int getIdade() {
         return idade;
     }
 
-    // Nao e final: Infantil e Adulto reescrevem para garantir que a idade combina com o tipo de conta.
     public void setIdade(int idade) {
-        validarIdade(idade);
-        this.idade = idade;
-    }
-
-    private void validarIdade(int idade) {
         if (idade < 0 || idade > 120) {
-            throw new IllegalArgumentException("Idade invalida. Use um valor entre 0 e 120.");
+            System.out.println("Erro: idade invalida. Use um valor entre 0 e 120.");
+        } else {
+            this.idade = idade;
         }
     }
 
-    // Controle parental: cada tipo de conta tem a sua regra.
+    // Diz se o nome e a idade foram aceitos pelos setters.
+    public boolean estaValido() {
+        return nome != null && idade >= 0;
+    }
+
+    // Controle parental: cada tipo de conta escreve a sua regra (sobreposicao).
     public abstract boolean podeAssistir(Conteudo conteudo);
 
-    // "Infantil" ou "Adulta"
+    // "Infantil" ou "Adulta".
     public abstract String getTipoConta();
 
     @Override
