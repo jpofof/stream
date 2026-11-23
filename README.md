@@ -23,14 +23,14 @@ Plataforma de streaming em console. Projeto Integrador de POO - Fatec Votorantim
 - Sobrecarga: `Catalogo.buscar(String)`/`buscar(int)`, `listar()`/`listar(usuario)`/`listar(tipo)`, `calcularTotalRoyalties()`/`calcularTotalRoyalties(criador)`.
 - Interfaces: `Avaliavel` e `Remuneravel` (implementadas por `Conteudo`).
 - Agregacao: `Catalogo` tem um `ArrayList<Conteudo>`.
-- Menu com `Scanner`, `while` e `switch`; letras no lugar de numeros sao tratadas.
+- `Main` e uma demonstracao: cria objetos e chama os metodos, sem digitar nada.
 
 ## Regras do Tema 6
 - **Duracao padronizada:** tudo em minutos (`getDuracaoTotal`). Filme: duracao unica. Serie: temporadas x episodios x duracao. Podcast: minutos de audio.
 - **Avaliacao:** 1 a 5 estrelas; a media e recalculada a cada nota.
 - **Controle parental:** `podeAssistir` no usuario. `Infantil` so assiste faixa <= idade; `Adulto` assiste tudo.
 - **Royalties:** pagos ao criador por reproducao real (Filme R$ 0,50, Serie R$ 0,30, Podcast R$ 0,10). Tentativa bloqueada nao conta.
-- **Caso de teste:** menu opcao 8. Perfil de 14 anos tenta ver "Noite Sem Fim" (18+): aparece ACESSO NEGADO e a tentativa vai para o log de auditoria.
+- **Caso de teste:** secao 4 do `Main`. Perfil de 14 anos tenta ver "Noite Sem Fim" (18+): aparece ACESSO NEGADO e a tentativa vai para o log de auditoria.
 
 ## Polimorfismo (so o que a turma viu)
 - **Sobrecarga:** mesmo nome de metodo, parametros diferentes (`listar`, `buscar`).
@@ -41,7 +41,6 @@ Plataforma de streaming em console. Projeto Integrador de POO - Fatec Votorantim
 - `extends`: herda de uma classe. `implements`: assina uma interface.
 - `super(...)`: chama o construtor da classe mae. `super.metodo()`: chama o metodo da mae.
 - `ArrayList<Conteudo>`: lista que cresce sozinha.
-- `hasNextInt()`: confere se o proximo valor digitado e inteiro, antes de ler.
 
 ## Perguntas para a defesa
 - **Por que `Conteudo` e abstrata?** Nao existe "conteudo generico"; so Filme, Serie ou Podcast.
