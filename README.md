@@ -9,7 +9,7 @@ Plataforma de streaming em console. Projeto Integrador de POO - Fatec Votorantim
 ## Estrutura (pacotes)
 | Pacote | Classes | Papel |
 |---|---|---|
-| `stream` | `Main` | Demonstracao (sem digitar) |
+| `stream` | `Main` | Demonstracao + menu no console |
 | `stream.conteudo` | `Conteudo` (abstrata), `Filme`, `Serie`, `Podcast` | Heranca |
 | `stream.usuario` | `SuperClassUsuarios` (abstrata), `Infantil`, `Adulto` | Heranca + controle parental |
 | `stream.contrato` | `Avaliavel`, `Remuneravel` | Interfaces |
@@ -23,7 +23,7 @@ Plataforma de streaming em console. Projeto Integrador de POO - Fatec Votorantim
 - Sobrecarga: `Catalogo.buscar(String)`/`buscar(int)`, `listar()`/`listar(usuario)`/`listar(tipo)`, `calcularTotalRoyalties()`/`calcularTotalRoyalties(criador)`.
 - Interfaces: `Avaliavel` e `Remuneravel` (implementadas por `Conteudo`).
 - Agregacao: `Catalogo` tem um `ArrayList<Conteudo>`.
-- `Main` e uma demonstracao: cria objetos e chama os metodos, sem digitar nada.
+- `Main`: primeiro roda uma demonstracao (objetos criados no codigo) e depois abre um menu com `Scanner`, `while` e `switch`. Letras no lugar de numeros sao tratadas com `hasNextInt()`.
 
 ## Regras do Tema 6
 - **Duracao padronizada:** tudo em minutos (`getDuracaoTotal`). Filme: duracao unica. Serie: temporadas x episodios x duracao. Podcast: minutos de audio.
@@ -37,6 +37,7 @@ Plataforma de streaming em console. Projeto Integrador de POO - Fatec Votorantim
 - **Sobreposicao:** a filha reescreve o metodo da mae com `@Override` (`calcularRoyalties` em cada tipo).
 
 ## Mini-glossario do Java usado
+- `hasNextInt()`: confere se o proximo valor digitado e inteiro, antes de ler.
 - `abstract`: classe que nao pode ser criada com `new`, so herdada.
 - `extends`: herda de uma classe. `implements`: assina uma interface.
 - `super(...)`: chama o construtor da classe mae. `super.metodo()`: chama o metodo da mae.
