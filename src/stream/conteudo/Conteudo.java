@@ -113,7 +113,10 @@ public abstract class Conteudo implements Avaliavel, Remuneravel {
     // "Filme", "Serie" ou "Podcast".
     public abstract String getTipo();
 
-    // calcularRoyalties() vem do contrato Remuneravel e tambem fica para as filhas.
+    // Valor em reais para o criador (o contrato Remuneravel pede este metodo).
+    // Cada filha calcula do seu jeito, porque cada tipo paga um valor diferente.
+    @Override
+    public abstract double calcularRoyalties();
 
     // ---------- Regras que valem para todos ----------
 
