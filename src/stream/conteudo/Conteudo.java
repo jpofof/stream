@@ -1,79 +1,60 @@
 package stream.conteudo;
 
-import java.time.Duration;
-
 import stream.contrato.Avaliavel;
 import stream.contrato.Remuneravel;
 import stream.usuario.SuperClassUsuarios;
 
 /**
- * Superclasse abstrata de tudo que existe no catalogo (filme, serie, podcast).
- * Guarda o que e comum a todos e obriga as subclasses a definirem o que muda:
- * a duracao total, o tipo e o calculo de royalties.
+ * Classe mae (abstrata) de tudo que existe no catalogo: Filme, Serie e Podcast.
+ * Ela guarda o que e igual para todos. O que muda de um para outro fica
+ * como metodo abstract, e cada filha e obrigada a escrever o seu.
  */
 public abstract class Conteudo implements Avaliavel, Remuneravel {
 
-    // protected: as subclasses podem LER estes atributos diretamente.
-    // Para ALTERAR, so pelos setters (que validam).
+    // protected: as classes filhas tambem enxergam estes atributos.
     protected String nome;
     protected String categoria;
-    protected int faixa;      // classificacao indicativa: 0 (livre), 10, 12, 14, 16 ou 18
     protected String criador;
-    protected float nota;     // media das avaliacoes (0 enquanto ninguem avaliou)
+    protected int faixa = -1;   // -1 = ainda nao informada. Validas: 0 (livre), 10, 12, 14, 16 e 18
+    protected double nota;      // media das notas (0 enquanto ninguem avaliar)
 
-    // private: so a propria classe mexe. Nao existem setters publicos para estes,
-    // porque ninguem pode "inventar" uma nota ou uma reproducao de fora.
+    // private: so esta classe mexe. Por isso estes nao tem setter:
+    // ninguem de fora pode "inventar" uma nota ou uma reproducao.
     private int somaNotas;
-    private int quantidadeAvaliacoes;
+    private int quantidadeNotas;
     private int totalReproducoes;
 
     public Conteudo(String nome, String categoria, int faixa, String criador) {
-        setNome(nome);
-        setCategoria(categoria);
-        setFaixa(faixa);
-        setCriador(criador);
+        this.setNome(nome);
+        this.setCategoria(categoria);
+        this.setFaixa(faixa);
+        this.setCriador(criador);
     }
 
-    // ---------- Getters e Setters com validacao ----------
-    // Os setters sao "final": como o construtor chama eles, nenhuma subclasse pode
-    // reescrever um setter e burlar a validacao.
+    // ---------- Getters e Setters (os setters recusam valor invalido) ----------
 
     public String getNome() {
         return nome;
     }
 
-    public final void setNome(String nome) {
+    public void setNome(String nome) {
         if (nome == null || nome.trim().isEmpty()) {
-            throw new IllegalArgumentException("O nome do conteudo nao pode ser vazio.");
+            System.out.println("Erro: o nome nao pode ser vazio.");
+        } else {
+            this.nome = nome.trim();
         }
-        this.nome = nome.trim();
     }
 
     public String getCategoria() {
         return categoria;
     }
 
-    public final void setCategoria(String categoria) {
+    public void setCategoria(String categoria) {
         if (categoria == null || categoria.trim().isEmpty()) {
-            throw new IllegalArgumentException("A categoria nao pode ser vazia.");
+            System.out.println("Erro: a categoria nao pode ser vazia.");
+        } else {
+            this.categoria = categoria.trim();
         }
-        this.categoria = categoria.trim();
-    }
-
-    public int getFaixa() {
-        return faixa;
-    }
-
-    public final void setFaixa(int faixa) {
-        if (faixa < 0) {
-            throw new IllegalArgumentException("A faixa etaria nao pode ser negativa.");
-        }
-        boolean valida = faixa == 0 || faixa == 10 || faixa == 12
-                || faixa == 14 || faixa == 16 || faixa == 18;
-        if (!valida) {
-            throw new IllegalArgumentException("Faixa etaria invalida. Use 0 (livre), 10, 12, 14, 16 ou 18.");
-        }
-        this.faixa = faixa;
     }
 
     @Override
@@ -81,82 +62,78 @@ public abstract class Conteudo implements Avaliavel, Remuneravel {
         return criador;
     }
 
-    public final void setCriador(String criador) {
+    public void setCriador(String criador) {
         if (criador == null || criador.trim().isEmpty()) {
-            throw new IllegalArgumentException("O criador nao pode ser vazio.");
+            System.out.println("Erro: o criador nao pode ser vazio.");
+        } else {
+            this.criador = criador.trim();
         }
-        this.criador = criador.trim();
+    }
+
+    public int getFaixa() {
+        return faixa;
+    }
+
+    public void setFaixa(int faixa) {
+        if (faixa == 0 || faixa == 10 || faixa == 12 || faixa == 14 || faixa == 16 || faixa == 18) {
+            this.faixa = faixa;
+        } else {
+            System.out.println("Erro: faixa etaria invalida. Use 0 (livre), 10, 12, 14, 16 ou 18.");
+        }
+    }
+
+    @Override
+    public double getNota() {
+        return nota;
     }
 
     public int getTotalReproducoes() {
         return totalReproducoes;
     }
 
-    // ---------- Contrato Avaliavel ----------
+    // ---------- Avaliacao (contrato Avaliavel) ----------
 
     @Override
-    public void avaliar(int estrelas) {
+    public boolean avaliar(int estrelas) {
         if (estrelas < 1 || estrelas > 5) {
-            throw new IllegalArgumentException("A nota deve ser de 1 a 5 estrelas.");
-        }
-        somaNotas += estrelas;
-        quantidadeAvaliacoes++;
-        // Recalcula a media a cada nova avaliacao
-        nota = (float) somaNotas / quantidadeAvaliacoes;
-    }
-
-    @Override
-    public float getNota() {
-        return nota;
-    }
-
-    @Override
-    public int getQuantidadeAvaliacoes() {
-        return quantidadeAvaliacoes;
-    }
-
-    // ---------- Contrato Remuneravel ----------
-    // getCriador() ja foi implementado acima.
-    // calcularRoyalties() fica abstrato: cada subclasse tem o seu valor por reproducao.
-    @Override
-    public abstract double calcularRoyalties();
-
-    // ---------- Metodos abstratos (cada subclasse e obrigada a escrever o seu) ----------
-
-    // Duracao total padronizada em Duration:
-    // filme = duracao unica, serie = soma dos episodios, podcast = tempo de audio.
-    public abstract Duration getDuracaoTotal();
-
-    // Nome do tipo ("Filme", "Serie" ou "Podcast")
-    public abstract String getTipo();
-
-    // ---------- Regras de negocio comuns ----------
-
-    // Validacao de duracao usada pelas subclasses (rejeita nula, zero ou negativa).
-    protected static void validarDuracao(Duration duracao) {
-        if (duracao == null || duracao.isZero() || duracao.isNegative()) {
-            throw new IllegalArgumentException("A duracao deve ser maior que zero.");
-        }
-    }
-
-    /**
-     * Tenta reproduzir o conteudo para um usuario.
-     * Quem decide se pode assistir e o proprio usuario (Infantil ou Adulto reescrevem podeAssistir).
-     * Retorna true se foi reproduzido e false se foi bloqueado pela faixa etaria.
-     * As subclasses reescrevem (@Override) este metodo para mostrar a sua propria mensagem.
-     */
-    public boolean reproduzir(SuperClassUsuarios usuario) {
-        if (usuario == null) {
-            throw new IllegalArgumentException("E necessario informar um usuario para reproduzir.");
-        }
-        if (!usuario.podeAssistir(this)) {
-            System.out.println("ACESSO NEGADO: \"" + nome + "\" tem classificacao "
-                    + getFaixaTexto() + " e o usuario " + usuario.getNome()
-                    + " tem " + usuario.getIdade() + " anos.");
+            System.out.println("Erro: a nota deve ser de 1 a 5 estrelas.");
             return false;
         }
-        totalReproducoes++;
+        somaNotas = somaNotas + estrelas;
+        quantidadeNotas = quantidadeNotas + 1;
+        nota = (double) somaNotas / quantidadeNotas;   // recalcula a media
         return true;
+    }
+
+    // ---------- Metodos abstratos: cada filha escreve o seu (sobreposicao) ----------
+
+    // Duracao total em MINUTOS (o mesmo padrao para todos).
+    public abstract int getDuracaoTotal();
+
+    // "Filme", "Serie" ou "Podcast".
+    public abstract String getTipo();
+
+    // calcularRoyalties() vem do contrato Remuneravel e tambem fica para as filhas.
+
+    // ---------- Regras que valem para todos ----------
+
+    // Diz se todos os dados foram aceitos pelos setters.
+    // As filhas reescrevem (@Override) para conferir os dados delas tambem.
+    public boolean estaValido() {
+        return nome != null && categoria != null && criador != null && faixa >= 0;
+    }
+
+    // Tenta reproduzir para um usuario. Devolve true se tocou e false se foi bloqueado.
+    // Quem decide se pode assistir e o usuario (Infantil ou Adulto), pelo metodo podeAssistir.
+    // As filhas reescrevem este metodo, chamam super.reproduzir() e mostram a mensagem delas.
+    public boolean reproduzir(SuperClassUsuarios usuario) {
+        if (usuario.podeAssistir(this)) {
+            totalReproducoes = totalReproducoes + 1;
+            return true;
+        }
+        System.out.println("ACESSO NEGADO: \"" + nome + "\" tem classificacao " + getFaixaTexto()
+                + " e o usuario " + usuario.getNome() + " tem " + usuario.getIdade() + " anos.");
+        return false;
     }
 
     public String getFaixaTexto() {
@@ -166,42 +143,29 @@ public abstract class Conteudo implements Avaliavel, Remuneravel {
         return faixa + " anos";
     }
 
-    // Converte a duracao total para um texto como "2h 15min".
+    // Transforma os minutos em texto, por exemplo 135 vira "2h 15min".
     public String getDuracaoFormatada() {
-        long total = getDuracaoTotal().toMinutes();
-        long horas = total / 60;
-        long minutos = total % 60;
+        int total = getDuracaoTotal();
+        int horas = total / 60;
+        int minutos = total % 60;
         if (horas == 0) {
             return minutos + "min";
-        }
-        if (minutos == 0) {
-            return horas + "h";
         }
         return horas + "h " + minutos + "min";
     }
 
     public String getNotaTexto() {
-        if (quantidadeAvaliacoes == 0) {
+        if (quantidadeNotas == 0) {
             return "sem avaliacoes";
         }
-        return String.format("%.1f estrelas (%d avaliacoes)", nota, quantidadeAvaliacoes);
+        double arredondada = Math.round(nota * 10) / 10.0;   // 1 casa decimal
+        return arredondada + " estrelas (" + quantidadeNotas + " avaliacoes)";
     }
 
-    // As subclasses reescrevem este metodo e chamam super.exibirDetalhes() para completar a ficha.
-    public void exibirDetalhes() {
-        System.out.println("[" + getTipo() + "] " + nome);
-        System.out.println("   Categoria......: " + categoria);
-        System.out.println("   Criador........: " + criador);
-        System.out.println("   Classificacao..: " + getFaixaTexto());
-        System.out.println("   Duracao total..: " + getDuracaoFormatada());
-        System.out.println("   Nota media.....: " + getNotaTexto());
-        System.out.println("   Reproducoes....: " + totalReproducoes);
-    }
-
-    // Resumo de uma linha, usado nas listagens do catalogo.
+    // Resumo de uma linha, usado nas listagens.
     @Override
     public String toString() {
-        return "[" + getTipo() + "] " + nome + " | " + getFaixaTexto()
-                + " | " + getDuracaoFormatada() + " | " + getNotaTexto();
+        return "[" + getTipo() + "] " + nome + " | " + getFaixaTexto() + " | "
+                + getDuracaoFormatada() + " | " + getNotaTexto();
     }
 }

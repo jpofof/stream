@@ -1,34 +1,36 @@
 package stream.conteudo;
 
-import java.time.Duration;
-
 import stream.usuario.SuperClassUsuarios;
 
 /**
- * Filme: tem uma unica duracao.
+ * Filme: tem uma duracao unica, em minutos.
  */
 public class Filme extends Conteudo {
 
-    private static final double VALOR_POR_REPRODUCAO = 0.50; // R$ por reproducao
+    private int duracao;                           // em minutos
+    private double valorPorReproducao = 0.50;      // R$ pagos ao criador a cada reproducao
 
-    private Duration duracao;
-
-    public Filme(String nome, String categoria, int faixa, String criador, Duration duracao) {
+    public Filme(String nome, String categoria, int faixa, String criador, int duracao) {
         super(nome, categoria, faixa, criador);
-        setDuracao(duracao);
+        this.setDuracao(duracao);
     }
 
-    public Duration getDuracao() {
+    public int getDuracao() {
         return duracao;
     }
 
-    public final void setDuracao(Duration duracao) {
-        validarDuracao(duracao);
-        this.duracao = duracao;
+    public void setDuracao(int duracao) {
+        if (duracao <= 0) {
+            System.out.println("Erro: a duracao do filme deve ser maior que zero.");
+        } else {
+            this.duracao = duracao;
+        }
     }
 
+    // ---------- Sobreposicao (@Override): escrevendo os metodos da classe mae ----------
+
     @Override
-    public Duration getDuracaoTotal() {
+    public int getDuracaoTotal() {
         return duracao;
     }
 
@@ -39,15 +41,20 @@ public class Filme extends Conteudo {
 
     @Override
     public double calcularRoyalties() {
-        return getTotalReproducoes() * VALOR_POR_REPRODUCAO;
+        return getTotalReproducoes() * valorPorReproducao;
+    }
+
+    @Override
+    public boolean estaValido() {
+        return super.estaValido() && duracao > 0;
     }
 
     @Override
     public boolean reproduzir(SuperClassUsuarios usuario) {
-        boolean liberado = super.reproduzir(usuario); // aplica o controle parental
+        boolean liberado = super.reproduzir(usuario);
         if (liberado) {
-            System.out.println("Reproduzindo o filme \"" + nome + "\" ("
-                    + getDuracaoFormatada() + "). Bom filme, " + usuario.getNome() + "!");
+            System.out.println("Reproduzindo o filme \"" + nome + "\" (" + getDuracaoFormatada()
+                    + "). Bom filme, " + usuario.getNome() + "!");
         }
         return liberado;
     }
