@@ -21,7 +21,7 @@ public abstract class SuperClassUsuarios {
     }
 
     public void setNome(String nome) {
-        if (nome == null || nome.trim().equals("")) {
+        if (nome == null || nome.equals("")) {
             System.out.println("Erro: o nome do usuario nao pode ser vazio.");
         } else {
             this.nome = nome;
