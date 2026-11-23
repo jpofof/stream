@@ -1,56 +1,67 @@
 package stream.catalogo;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import stream.conteudo.Conteudo;
 import stream.usuario.SuperClassUsuarios;
 
 /**
- * Classe gerenciadora do catalogo (Agregacao: o Catalogo "TEM" varios Conteudos).
- * A lista e do tipo da SUPERCLASSE, entao guarda filmes, series e podcasts juntos.
+ * Classe gerenciadora do catalogo.
+ * Agregacao ("tem um"): o Catalogo TEM uma lista de Conteudo.
+ * Como a lista e de Conteudo (a classe mae), ela guarda Filme, Serie e Podcast juntos.
  */
 public class Catalogo {
 
     // private: ninguem de fora mexe direto nas listas.
-    private final ArrayList<Conteudo> conteudos;
-    private final ArrayList<String> logAuditoria;
+    private ArrayList<Conteudo> conteudos;
+    private ArrayList<String> logAuditoria;
 
     public Catalogo() {
-        conteudos = new ArrayList<>();
-        logAuditoria = new ArrayList<>();
+        conteudos = new ArrayList<Conteudo>();
+        logAuditoria = new ArrayList<String>();
     }
 
     // ---------- Cadastro ----------
 
-    public void adicionar(Conteudo conteudo) {
-        if (conteudo == null) {
-            throw new IllegalArgumentException("Nao e possivel cadastrar um conteudo nulo.");
+    // Devolve true se cadastrou e false se recusou.
+    public boolean adicionar(Conteudo conteudo) {
+        if (conteudo == null || !conteudo.estaValido()) {
+            System.out.println("Cadastro cancelado: algum dado e invalido (veja os erros acima).");
+            return false;
         }
         if (buscar(conteudo.getNome()) != null) {
-            throw new IllegalArgumentException("Ja existe um conteudo chamado \""
-                    + conteudo.getNome() + "\" no catalogo.");
+            System.out.println("Cadastro cancelado: ja existe um conteudo chamado \""
+                    + conteudo.getNome() + "\".");
+            return false;
         }
         conteudos.add(conteudo);
+        return true;
     }
 
     public int getQuantidade() {
         return conteudos.size();
     }
 
-    // Devolve uma COPIA da lista, assim quem chamar nao consegue alterar a lista interna.
+    // Devolve uma COPIA da lista. Assim quem chamar nao consegue mexer na lista original.
     public ArrayList<Conteudo> getConteudos() {
-        return new ArrayList<>(conteudos);
+        ArrayList<Conteudo> copia = new ArrayList<Conteudo>();
+        for (Conteudo c : conteudos) {
+            copia.add(c);
+        }
+        return copia;
     }
 
     public ArrayList<String> getLogAuditoria() {
-        return new ArrayList<>(logAuditoria);
+        ArrayList<String> copia = new ArrayList<String>();
+        for (String registro : logAuditoria) {
+            copia.add(registro);
+        }
+        return copia;
     }
 
-    // ---------- Busca (sobrecarga: mesmo nome, parametros diferentes) ----------
+    // ---------- Busca (sobrecarga: o mesmo nome buscar com parametros diferentes) ----------
 
-    // Busca pelo nome (ignora maiusculas/minusculas). Retorna null se nao achar.
+    // Busca pelo nome. Retorna null se nao achar.
     public Conteudo buscar(String nome) {
         if (nome == null) {
             return null;
@@ -63,7 +74,7 @@ public class Catalogo {
         return null;
     }
 
-    // Busca pela posicao mostrada nas listagens (comeca em 1). Retorna null se for invalida.
+    // Busca pelo numero que aparece na listagem (o primeiro e o 1). Retorna null se nao existir.
     public Conteudo buscar(int posicao) {
         if (posicao < 1 || posicao > conteudos.size()) {
             return null;
@@ -71,8 +82,8 @@ public class Catalogo {
         return conteudos.get(posicao - 1);
     }
 
-    // ---------- Listagem (sobrecarga: 3 assinaturas) ----------
-    // Em todas, o numero mostrado e a posicao no catalogo completo (serve para buscar(int)).
+    // ---------- Listagem (sobrecarga: tres jeitos de chamar listar) ----------
+    // Em todas, o numero mostrado e o do catalogo completo (o mesmo usado em buscar(int)).
 
     // Lista tudo.
     public void listar() {
@@ -85,15 +96,14 @@ public class Catalogo {
         }
     }
 
-    // Lista somente o que o usuario pode assistir (controle parental).
+    // Lista so o que o usuario pode assistir (controle parental).
     public void listar(SuperClassUsuarios usuario) {
         int ocultos = 0;
         for (int i = 0; i < conteudos.size(); i++) {
-            Conteudo c = conteudos.get(i);
-            if (usuario.podeAssistir(c)) {
-                System.out.println((i + 1) + " - " + c);
+            if (usuario.podeAssistir(conteudos.get(i))) {
+                System.out.println((i + 1) + " - " + conteudos.get(i));
             } else {
-                ocultos++;
+                ocultos = ocultos + 1;
             }
         }
         if (ocultos > 0) {
@@ -101,14 +111,13 @@ public class Catalogo {
         }
     }
 
-    // Lista somente um tipo: "Filme", "Serie" ou "Podcast".
+    // Lista so um tipo: "Filme", "Serie" ou "Podcast".
     public void listar(String tipo) {
         int encontrados = 0;
         for (int i = 0; i < conteudos.size(); i++) {
-            Conteudo c = conteudos.get(i);
-            if (c.getTipo().equalsIgnoreCase(tipo)) {
-                System.out.println((i + 1) + " - " + c);
-                encontrados++;
+            if (conteudos.get(i).getTipo().equalsIgnoreCase(tipo)) {
+                System.out.println((i + 1) + " - " + conteudos.get(i));
+                encontrados = encontrados + 1;
             }
         }
         if (encontrados == 0) {
@@ -116,30 +125,20 @@ public class Catalogo {
         }
     }
 
-    // ---------- Reproducao e auditoria ----------
+    // ---------- Reproducao e log de auditoria ----------
 
-    /**
-     * Reproduz o conteudo para o usuario. O metodo reproduzir() chamado aqui e o da SUBCLASSE
-     * (polimorfismo) e quem libera ou bloqueia e o tipo de conta do usuario (outro polimorfismo).
-     * Se o controle parental bloquear, a tentativa vai para o log de auditoria.
-     */
+    // Reproduz o conteudo para o usuario. O reproduzir() que roda aqui e o da filha
+    // (Filme, Serie ou Podcast), porque cada uma sobrepoe o metodo da classe mae.
+    // Se o controle parental bloquear, a tentativa fica registrada no log.
     public boolean reproduzir(Conteudo conteudo, SuperClassUsuarios usuario) {
-        if (conteudo == null) {
-            throw new IllegalArgumentException("Conteudo nao encontrado.");
-        }
         boolean liberado = conteudo.reproduzir(usuario);
         if (!liberado) {
-            registrarLog("BLOQUEADO - usuario " + usuario.getNome() + " (" + usuario.getIdade()
+            logAuditoria.add("BLOQUEADO - usuario " + usuario.getNome() + " (" + usuario.getIdade()
                     + " anos, conta " + usuario.getTipoConta() + ") tentou reproduzir \""
                     + conteudo.getNome() + "\" [" + conteudo.getTipo() + ", classificacao "
                     + conteudo.getFaixaTexto() + "]");
         }
         return liberado;
-    }
-
-    private void registrarLog(String mensagem) {
-        DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-        logAuditoria.add("[" + LocalDateTime.now().format(formato) + "] " + mensagem);
     }
 
     public void exibirLogAuditoria() {
@@ -152,18 +151,18 @@ public class Catalogo {
         }
     }
 
-    // ---------- Royalties (sobrecarga: com e sem criador) ----------
+    // ---------- Royalties (sobrecarga: com e sem o nome do criador) ----------
 
     // Soma os royalties de todo o catalogo.
     public double calcularTotalRoyalties() {
         double total = 0;
         for (Conteudo c : conteudos) {
-            total += c.calcularRoyalties(); // cada subclasse calcula do seu jeito
+            total = total + c.calcularRoyalties();   // cada filha calcula do seu jeito
         }
         return total;
     }
 
-    // Soma os royalties apenas dos conteudos de um criador.
+    // Soma os royalties so dos conteudos de um criador.
     public double calcularTotalRoyalties(String criador) {
         double total = 0;
         if (criador == null) {
@@ -171,7 +170,7 @@ public class Catalogo {
         }
         for (Conteudo c : conteudos) {
             if (c.getCriador().equalsIgnoreCase(criador.trim())) {
-                total += c.calcularRoyalties();
+                total = total + c.calcularRoyalties();
             }
         }
         return total;
@@ -183,9 +182,9 @@ public class Catalogo {
             return;
         }
         for (Conteudo c : conteudos) {
-            System.out.println(String.format("%-30s | %-20s | %4d reproducoes | R$ %8.2f",
-                    c.getNome(), c.getCriador(), c.getTotalReproducoes(), c.calcularRoyalties()));
+            System.out.printf("%-30s | %-20s | %3d reproducoes | R$ %.2f%n",
+                    c.getNome(), c.getCriador(), c.getTotalReproducoes(), c.calcularRoyalties());
         }
-        System.out.println(String.format("TOTAL DE ROYALTIES: R$ %.2f", calcularTotalRoyalties()));
+        System.out.printf("TOTAL DE ROYALTIES: R$ %.2f%n", calcularTotalRoyalties());
     }
 }

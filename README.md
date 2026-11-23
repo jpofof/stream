@@ -1,78 +1,50 @@
-# StreamHub — Plataforma de Streaming de Mídias
+# StreamHub - Tema 6 (POO em Java)
 
-Projeto Integrador de POO (Técnica de Programação I) — FATEC Votorantim, DSM. **Tema 6.**
+Plataforma de streaming em console. Projeto Integrador de POO - Fatec Votorantim (DSM).
 
-Sistema de console em Java para gerenciar um catálogo de **filmes, séries e episódios de podcast**, com controle parental por faixa etária (contas Infantil e Adulto), avaliação por estrelas e cálculo de royalties pagos aos criadores.
+## Como rodar (NetBeans)
+1. File > Open Project e escolha a pasta do projeto.
+2. Botao direito no projeto > Run (a classe principal e `stream.Main`).
 
-## Como abrir e rodar
+## Estrutura (pacotes)
+| Pacote | Classes | Papel |
+|---|---|---|
+| `stream` | `Main` | Menu no console |
+| `stream.conteudo` | `Conteudo` (abstrata), `Filme`, `Serie`, `Podcast` | Heranca |
+| `stream.usuario` | `SuperClassUsuarios` (abstrata), `Infantil`, `Adulto` | Heranca + controle parental |
+| `stream.contrato` | `Avaliavel`, `Remuneravel` | Interfaces |
+| `stream.catalogo` | `Catalogo` | Agregacao (ArrayList de Conteudo) |
 
-No NetBeans: `File > Open Project` e selecione a pasta do projeto (projeto Ant). A classe principal já está configurada como `stream.Main`. O código usa apenas recursos do Java 17, então roda em qualquer JDK 17 ou superior.
+## Checklist do roteiro
+- Classe abstrata com 3 filhas (`extends`): `Conteudo` -> Filme, Serie, Podcast.
+- Atributos `private`/`protected` com getters e setters que validam (nao aceitam vazio, negativo ou zero).
+- Construtores com parametros.
+- `@Override` (sobreposicao): `getDuracaoTotal`, `getTipo`, `calcularRoyalties`, `reproduzir`, `estaValido`, `podeAssistir`.
+- Sobrecarga: `Catalogo.buscar(String)`/`buscar(int)`, `listar()`/`listar(usuario)`/`listar(tipo)`, `calcularTotalRoyalties()`/`calcularTotalRoyalties(criador)`.
+- Interfaces: `Avaliavel` e `Remuneravel` (implementadas por `Conteudo`).
+- Agregacao: `Catalogo` tem um `ArrayList<Conteudo>`.
+- Menu com `Scanner`, `while` e `switch`; letras no lugar de numeros sao tratadas.
 
-> Os textos do console estão sem acento de propósito, para não aparecerem símbolos quebrados no Output do NetBeans no Windows.
+## Regras do Tema 6
+- **Duracao padronizada:** tudo em minutos (`getDuracaoTotal`). Filme: duracao unica. Serie: temporadas x episodios x duracao. Podcast: minutos de audio.
+- **Avaliacao:** 1 a 5 estrelas; a media e recalculada a cada nota.
+- **Controle parental:** `podeAssistir` no usuario. `Infantil` so assiste faixa <= idade; `Adulto` assiste tudo.
+- **Royalties:** pagos ao criador por reproducao real (Filme R$ 0,50, Serie R$ 0,30, Podcast R$ 0,10). Tentativa bloqueada nao conta.
+- **Caso de teste:** menu opcao 8. Perfil de 14 anos tenta ver "Noite Sem Fim" (18+): aparece ACESSO NEGADO e a tentativa vai para o log de auditoria.
 
-## Estrutura de pacotes
+## Polimorfismo (so o que a turma viu)
+- **Sobrecarga:** mesmo nome de metodo, parametros diferentes (`listar`, `buscar`).
+- **Sobreposicao:** a filha reescreve o metodo da mae com `@Override` (`calcularRoyalties` em cada tipo).
 
-```
-src/stream/
-├── Main.java                  menu com Scanner / while / switch
-├── conteudo/                  Conteudo (abstrata), Filme, Serie, Podcast
-├── usuario/                   SuperClassUsuarios (abstrata), Infantil, Adulto
-├── contrato/                  Avaliavel, Remuneravel (interfaces)
-└── catalogo/                  Catalogo (agregação + sobrecarga + log de auditoria)
-```
+## Mini-glossario do Java usado
+- `abstract`: classe que nao pode ser criada com `new`, so herdada.
+- `extends`: herda de uma classe. `implements`: assina uma interface.
+- `super(...)`: chama o construtor da classe mae. `super.metodo()`: chama o metodo da mae.
+- `ArrayList<Conteudo>`: lista que cresce sozinha.
+- `hasNextInt()`: confere se o proximo valor digitado e inteiro, antes de ler.
 
-## Checklist do roteiro → onde está no código
-
-| Requisito | Onde está |
-|---|---|
-| Atributos `private`/`protected`, getters/setters com validação, construtores parametrizados | Todas as classes. Os setters rejeitam nulo, vazio, negativo e zero (ex.: `Conteudo.setNome`, `Filme.setDuracao`, `SuperClassUsuarios.setIdade`) |
-| Superclasse abstrata + 2 ou mais subclasses com `extends` | `Conteudo` → `Filme`, `Serie`, `Podcast`; e também `SuperClassUsuarios` → `Infantil`, `Adulto` |
-| `@Override` | `getDuracaoTotal`, `getTipo`, `calcularRoyalties`, `reproduzir`, `exibirDetalhes` nas subclasses de `Conteudo`; `podeAssistir`, `getTipoConta`, `setIdade` nas contas |
-| Sobrecarga | `Catalogo.buscar(String)` / `buscar(int)`; `listar()` / `listar(SuperClassUsuarios)` / `listar(String)`; `calcularTotalRoyalties()` / `calcularTotalRoyalties(String)` |
-| Interface | `Avaliavel` e `Remuneravel`, implementadas por `Conteudo` |
-| Agregação com `ArrayList<Superclasse>` | `Catalogo` guarda `ArrayList<Conteudo>` (lista privada; `getConteudos()` devolve uma cópia) |
-| Menu com `Scanner`, `while` e `switch` | `Main` (letra no lugar de número pede de novo, não quebra) |
-
-## Divisão sugerida entre os 5 integrantes
-
-| Integrante | Arquivos |
-|---|---|
-| 1 — Arquiteto de Domínio | `Conteudo`, `Avaliavel`, `Remuneravel` |
-| 2 — Especialização A | `Filme`, `Serie` |
-| 3 — Especialização B | `Podcast`, `SuperClassUsuarios`, `Infantil`, `Adulto` |
-| 4 — Estruturas e Agregação | `Catalogo` |
-| 5 — Interface e Testes | `Main` + roteiro da apresentação |
-
-## Como o sistema resolve os desafios do Tema 6
-
-- **Contagem de tempo padronizada:** todo conteúdo usa `java.time.Duration`, e `getDuracaoTotal()` é abstrato em `Conteudo`. Filme e podcast devolvem a duração única; a série soma a duração de todos os episódios de todas as temporadas.
-- **Notas de 1 a 5 estrelas:** `Conteudo.avaliar(int)` rejeita notas fora do intervalo e recalcula a média (`nota`) a cada nova avaliação.
-- **Controle parental:** `Conteudo.reproduzir(SuperClassUsuarios)` pergunta ao usuário se ele `podeAssistir` o conteúdo. A conta `Infantil` (menor de 18) só libera o que tem faixa menor ou igual à idade; a `Adulto` libera tudo. Cada subclasse de conteúdo reescreve `reproduzir`, chama `super.reproduzir(...)` e só mostra a sua mensagem se foi liberado. O `Catalogo.reproduzir(...)` registra toda tentativa bloqueada no log de auditoria.
-- **Royalties pela reprodução real:** reproduções × valor por tipo (Filme R$ 0,50, Série R$ 0,30, Podcast R$ 0,10). Esses valores são de exemplo, definidos pelo grupo; ajustem se o professor passar outros.
-
-## O que mudou em relação ao que já estava nas branches
-
-- **Projeto NetBeans:** `build.xml`, `nbproject/project.xml`, `nbproject/build-impl.xml`, `nbproject/genfiles.properties` e `nbproject/project.properties` tinham marcadores de conflito de merge (`<<<<<<< Updated upstream`) e o NetBeans não conseguia abrir o projeto. Foi mantido o lado `Stream` / `main.class=stream.Main`.
-- **Pacotes:** as classes foram separadas em pacotes. `filme.java` virou `Filme.java` e `serie.java` virou `Serie.java` (o arquivo precisa ter o nome da classe pública). O `usuario.java` vazio foi removido porque a classe `stream.usuario` colidiria com o pacote `stream.usuario`.
-- **`Conteudo`:** manteve `nome`, `categoria`, `faixa` e `nota`, e ganhou `criador` (necessário para os royalties) e validações. A `nota` agora é a média calculada por `avaliar()`. A `duracao` saiu da superclasse porque uma série não tem uma duração única.
-- **`Serie`:** a lista `temporadas` (`ArrayList<ArrayList<Duration>>`) agora está declarada, com `addTemporada()` e `addEpisodio(temporada, duracao)`.
-- **Usuários:** `SuperClassUsuarios` ficou abstrata, com `nome`, `idade`, `podeAssistir` e `getTipoConta`. O `Sexo` e o `Verificacao()` saíram, porque nenhuma regra do Tema 6 usa o sexo e a verificação virou o próprio polimorfismo entre `Infantil` e `Adulto`. O `Infantil` apontava para `SuperClassUsuario` (singular, inexistente) e foi corrigido. O `Adulto` é novo.
-
-## Roteiro da demonstração (opção 9 do menu)
-
-1. Liste o catálogo (opção 2).
-2. Rode a opção **9**: um perfil de 14 anos tenta reproduzir *Noite Sem Fim* (18 anos). O sistema bloqueia, mostra o aviso e registra no log. Em seguida um perfil adulto assiste normalmente.
-3. Opção **8** mostra o log de auditoria.
-4. Opção **6** troca o perfil (menor de 18 vira conta Infantil, 18 ou mais vira Adulto); opção **4** reproduz conteúdos diferentes (cada tipo mostra sua própria mensagem — polimorfismo).
-5. Opção **5** avalia (tente a nota 7 para mostrar a validação) e a opção **7** mostra os royalties.
-6. Opção **1** cadastra um conteúdo novo (tente faixa 15 ou duração negativa para mostrar as validações).
-
-## Perguntas que podem cair na defesa
-
-- **Por que `Conteudo` é abstrata?** Não existe "um conteúdo genérico": ela obriga cada subclasse a definir a duração total, o tipo e os royalties.
-- **Por que a lista é `ArrayList<Conteudo>` e não `ArrayList<Filme>`?** Por causa do polimorfismo: uma lista só guarda qualquer subclasse, e cada objeto executa a sua versão do método.
-- **Quem decide se o usuário pode assistir?** A conta. `Infantil.podeAssistir` compara a faixa com a idade; `Adulto.podeAssistir` sempre libera. O `Conteudo` só pergunta, sem saber qual conta é.
-- **Por que `getConteudos()` devolve uma cópia?** Para quem chamar não conseguir alterar a lista interna (sem vazamento de escopo).
-- **Por que notas e reproduções não têm setter público?** Para ninguém "inventar" uma média ou uma reprodução; só os métodos `avaliar` e `reproduzir` alteram esses valores.
-- **Por que os setters são `final`?** Eles são chamados dentro do construtor; sendo `final`, nenhuma subclasse consegue reescrever e burlar a validação. Só `setIdade` não é `final`, de propósito: `Infantil` e `Adulto` reescrevem para garantir que a idade combina com o tipo de conta.
-- **Qual a diferença entre sobrecarga e sobrescrita?** Sobrecarga: mesmo nome, parâmetros diferentes (`Catalogo.listar`). Sobrescrita: a subclasse reescreve um método da mãe com `@Override` (`Filme.reproduzir`).
+## Perguntas para a defesa
+- **Por que `Conteudo` e abstrata?** Nao existe "conteudo generico"; so Filme, Serie ou Podcast.
+- **Onde esta a agregacao?** `Catalogo` tem uma lista de `Conteudo`.
+- **Como o Infantil e bloqueado?** `Catalogo.reproduzir` chama `conteudo.reproduzir(usuario)`, que pergunta `usuario.podeAssistir(this)`.
+- **Qual `calcularRoyalties` roda?** O da classe real do objeto (Filme, Serie ou Podcast).
